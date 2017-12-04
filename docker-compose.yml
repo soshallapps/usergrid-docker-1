@@ -1,0 +1,31 @@
+cassandra:
+  container_name: cassandra
+  image: yep1/usergrid-cassandra
+  volumes:
+    - ./cassandra-data:/var/lib/cassandra
+elasticsearch:
+  container_name: elasticsearch
+  image: yep1/usergrid-elasticsearch
+  volumes:
+    - ./elasticsearch-data:/data
+usergrid:
+  container_name: usergrid
+  image: yep1/usergrid
+  ports:
+    - "8080:8080"
+  environment:
+    - ORG_NAME=org
+    - APP_NAME=app
+    - ADMIN_USER=admin
+    - ADMIN_PASS=password
+    - ADMIN_MAIL=me@example.com
+  links:
+    - elasticsearch
+    - cassandra
+portal:
+  container_name: portal
+  image: yep1/usergrid-portal
+  ports:
+    - "80:80"
+  environment:
+    - USERGRID_HOST=public_reachable_ip_of_docker_host_goes_here:8080
